@@ -35,7 +35,7 @@
         .portal-container {
             text-align: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 900px;
             padding: 0 20px;
             box-sizing: border-box;
         }
@@ -63,6 +63,13 @@
             letter-spacing: 1px;
         }
 
+        /* カードをまとめるラッパー */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
         /* カード本体のデザイン */
         .card {
             background: var(--card-bg);
@@ -77,8 +84,9 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             box-shadow: 0 15px 35px -10px rgba(0,0,0,0.6);
+            text-align: left;
         }
 
         /* カード上部の見えないカラーバー（マウスを乗せると表示） */
@@ -160,12 +168,21 @@
             <p>Apps Portal</p>
         </header>
 
-        <a href="https://anfini-aix-team.github.io/OpenWork-Event-Management/" class="card" target="_blank">
-            <div class="card-icon">📅</div>
-            <h2 class="card-title">OpenWorkイベント管理</h2>
-            <p class="card-desc">イベントのスケジュールや参加者管理を行うためのアプリケーションです。</p>
-            <div class="card-link-text">Open App</div>
-        </a>
+        <div class="cards">
+            <a href="https://anfini-aix-team.github.io/OpenWork-Event-Management/" class="card" target="_blank">
+                <div class="card-icon">📅</div>
+                <h2 class="card-title">OpenWorkイベント管理</h2>
+                <p class="card-desc">イベントのスケジュールや参加者管理を行うためのアプリケーションです。</p>
+                <div class="card-link-text">Open App</div>
+            </a>
+
+            <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank">
+                <div class="card-icon">✉️</div>
+                <h2 class="card-title">応募者個別メッセージ自動作成</h2>
+                <p class="card-desc">パーソナライズされたメッセージを簡単に作成・生成するためのアプリケーションです。</p>
+                <div class="card-link-text">Open App</div>
+            </a>
+        </div>
 
         <footer>
             &copy; 2026 Anfini AIX Team. All rights reserved.
