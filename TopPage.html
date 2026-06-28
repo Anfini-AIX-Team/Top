@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anfini-AIX-Team Portal</title>
+    <style>
+        /* 全体のカラー設定（ダークモード） */
+        :root {
+            --bg-color: #0f172a; /* 深いネイビーブルー */
+            --card-bg: #1e293b; /* カードの背景色 */
+            --text-main: #f8fafc; /* メインテキスト（白） */
+            --text-muted: #94a3b8; /* サブテキスト（グレー） */
+            --accent1: #3b82f6; /* アクセントカラー（青） */
+            --accent2: #8b5cf6; /* アクセントカラー（紫） */
+        }
+        
+        /* ページ全体のベース設定 */
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            background: var(--bg-color);
+            /* 背景にうっすら光るグラデーションを配置 */
+            background-image: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.2), transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 画面の中央に配置 */
+        }
+
+        /* メインコンテンツを包むコンテナ */
+        .portal-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* ヘッダー（タイトル部分）の設定 */
+        header {
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0;
+            /* タイトル文字を青〜紫のグラデーションに */
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* カード本体のデザイン */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-decoration: none;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            /* 動きを滑らかにする設定 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.6);
+        }
+
+        /* カード上部の見えないカラーバー（マウスを乗せると表示） */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* マウスを乗せたとき（ホバー）のアニメーション */
+        .card:hover {
+            transform: translateY(-8px); /* 少し上に浮く */
+            box-shadow: 0 25px 50px -15px rgba(0,0,0,0.8); /* 影を濃く */
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .card:hover::before {
+            opacity: 1; /* 上部のカラーバーを表示 */
+        }
+
+        /* カード内のテキストやアイコンの設定 */
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 0 30px 0;
+        }
+
+        /* リンクボタン部分 */
+        .card-link-text {
+            color: var(--accent1);
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .card:hover .card-link-text {
+            color: var(--accent2); /* ホバーで紫に変化 */
+        }
+
+        /* 矢印アイコンの設定 */
+        .card-link-text::after {
+            content: "→";
+            transition: transform 0.3s;
+        }
+        .card:hover .card-link-text::after {
+            transform: translateX(5px); /* 矢印が右に動く */
+        }
+
+        /* フッター */
+        footer {
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        <header>
+            <h1>Anfini AIX</h1>
+            <p>Apps Portal</p>
+        </header>
+
+        <a href="https://anfini-aix-team.github.io/OpwnWork-Event-Management/" class="card" target="_blank">
+            <div class="card-icon">📅</div>
+            <h2 class="card-title">OpenWorkイベント管理</h2>
+            <p class="card-desc">イベントのスケジュールや参加者管理を行うためのアプリケーションです。</p>
+            <div class="card-link-text">Open App</div>
+        </a>
+
+        <footer>
+            &copy; 2026 Anfini-AIX-Team. All rights reserved.
+        </footer>
+    </div>
+
+</body>
+</html>
