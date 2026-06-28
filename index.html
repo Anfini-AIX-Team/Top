@@ -5,22 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anfini AIXポータル</title>
     <style>
-        /* 全体のカラー設定（ダークモード） */
+        /* Anfini コーポレートトーンのカラー定義 */
         :root {
-            --bg-color: #0f172a; /* 深いネイビーブルー */
-            --card-bg: #1e293b; /* カードの背景色 */
-            --text-main: #f8fafc; /* メインテキスト（白） */
-            --text-muted: #94a3b8; /* サブテキスト（グレー） */
-            --accent1: #3b82f6; /* アクセントカラー（青） */
-            --accent2: #8b5cf6; /* アクセントカラー（紫） */
+            --bg-color: #0a0f1d;       /* 深みのある洗練されたダークネイビーブラック */
+            --card-bg: #121829;        /* 落ち着いたトーンのカード背景 */
+            --text-main: #ffffff;      /* 純白のメインテキスト */
+            --text-muted: #8fa0ba;    /* 知的なシアン・グレーのサブテキスト */
+            --accent-gold: #c5a880;   /* 高級感のあるアンフィニ・ゴールド */
+            --accent-gold-light: #dfc59f; /* ホバー用の明るいゴールド */
+            --border-color: rgba(197, 168, 128, 0.15); /* ゴールドをベースにした極細ボーダー */
         }
         
+        * {
+            box-sizing: border-box;
+        }
+
         /* ページ全体のベース設定 */
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            font-family: 'Times New Roman', "Yu Mincho", "遊明朝", "Hiragino Mincho ProN", serif;
             background: var(--bg-color);
-            /* 背景にうっすら光るグラデーションを配置 */
-            background-image: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.2), transparent 40%);
+            /* 中央上部から静かに広がる繊細なグラデーション光 */
+            background-image: radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.08), transparent 60%);
             color: var(--text-main);
             margin: 0;
             padding: 0;
@@ -28,135 +33,136 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* 画面の中央に配置 */
+            justify-content: center;
         }
 
         /* メインコンテンツを包むコンテナ */
         .portal-container {
             text-align: center;
             width: 100%;
-            max-width: 900px;
-            padding: 0 20px;
-            box-sizing: border-box;
+            max-width: 960px;
+            padding: 60px 24px;
         }
 
         /* ヘッダー（タイトル部分）の設定 */
         header {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
+            font-size: 2.4rem;
+            font-weight: 300; /* 太すぎず洗練されたウェイトに */
             margin: 0;
-            /* タイトル文字を青〜紫のグラデーションに */
-            background: linear-gradient(135deg, var(--accent1), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
+            color: var(--text-main);
+            letter-spacing: 6px; /* 文字間隔を広げてラグジュアリーに */
+            text-transform: uppercase;
         }
 
         header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-top: 10px;
-            letter-spacing: 1px;
+            color: var(--accent-gold);
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-top: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
         /* カードをまとめるラッパー */
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
         }
 
         /* カード本体のデザイン */
         .card {
             background: var(--card-bg);
-            border-radius: 20px;
-            padding: 40px 30px;
+            border-radius: 8px; /* 角丸をシャープに抑える */
+            padding: 40px 32px;
             text-decoration: none;
             color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            /* 動きを滑らかにする設定 */
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid var(--border-color);
+            /* 滑らかでラグジュアリーな変遷効果 */
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.6);
             text-align: left;
-        }
-
-        /* カード上部の見えないカラーバー（マウスを乗せると表示） */
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent1), var(--accent2));
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
         /* マウスを乗せたとき（ホバー）のアニメーション */
         .card:hover {
-            transform: translateY(-8px); /* 少し上に浮く */
-            box-shadow: 0 25px 50px -15px rgba(0,0,0,0.8); /* 影を濃く */
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .card:hover::before {
-            opacity: 1; /* 上部のカラーバーを表示 */
+            transform: translateY(-4px); /* 浮き上がりは控えめにし、品を保つ */
+            border-color: var(--accent-gold); /* 枠線がゴールドに美しく光る */
+            background: #161e33; /* 背景を僅かに明るく */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         /* カード内のテキストやアイコンの設定 */
         .card-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 2.2rem;
+            margin-bottom: 24px;
+            filter: grayscale(30%); /* 絵文字の彩度を少し落として馴染ませる */
         }
+        
         .card-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin: 0 0 12px 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin: 0 0 14px 0;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
         }
+        
         .card-desc {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
             color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.6;
-            margin: 0 0 30px 0;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            margin: 0 0 32px 0;
+            font-weight: 300;
         }
 
         /* リンクボタン部分 */
         .card-link-text {
-            color: var(--accent1);
-            font-weight: 600;
-            font-size: 1rem;
+            color: var(--accent-gold);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            margin-top: auto; /* ボタンを常に下部に固定 */
             transition: color 0.3s;
         }
+        
         .card:hover .card-link-text {
-            color: var(--accent2); /* ホバーで紫に変化 */
+            color: var(--accent-gold-light); /* ホバーで明るいゴールドに変化 */
         }
 
-        /* 矢印アイコンの設定 */
+        /* 矢印アイコンの洗練化（細い矢印に） */
         .card-link-text::after {
             content: "→";
-            transition: transform 0.3s;
+            font-family: serif;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        
         .card:hover .card-link-text::after {
-            transform: translateX(5px); /* 矢印が右に動く */
+            transform: translateX(6px); /* 矢印が右に静かにスライド */
         }
 
         /* フッター */
         footer {
-            margin-top: 60px;
+            margin-top: 80px;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            opacity: 0.7;
         }
     </style>
 </head>
