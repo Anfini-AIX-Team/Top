@@ -87,10 +87,18 @@
             font-size: 0.95rem;
             font-weight: 400;
             padding: 8px 20px;
-            cursor: pointer;
+            cursor: grab; /* 並び替え可能であることを示す手袋アイコン */
             border-radius: 4px;
             letter-spacing: 1px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+        
+        /* ドラッグ中のスタイル */
+        .tab-btn.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+            background: rgba(197, 168, 128, 0.1);
         }
 
         .tab-btn:hover {
@@ -224,17 +232,18 @@
             border: none;
             font-size: 1.2rem;
             cursor: pointer;
-            color: rgba(143, 160, 186, 0.3);
+            color: rgba(143, 160, 186, 0.3); /* 通常時は薄いグレー */
             transition: all 0.2s ease;
             z-index: 10;
             padding: 4px;
         }
 
+        /* 【修正】ホバー時は少し大きくなるだけで、明るく（ゴールドに）はならない */
         .pin-btn:hover {
             transform: scale(1.1);
-            color: var(--accent-gold-light);
         }
 
+        /* 【修正】クリックしてお気に入り状態になった時のみゴールドに点灯 */
         .card.is-favorite .pin-btn {
             color: var(--accent-gold);
             filter: drop-shadow(0 0 4px rgba(197, 168, 128, 0.4));
@@ -259,14 +268,14 @@
             <p>Apps Portal</p>
         </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('favorites')">📌 お気に入り</button>
-            <button class="tab-btn" onclick="switchTab('all')">All</button>
-            <button class="tab-btn" onclick="switchTab('legal')">法務</button>
-            <button class="tab-btn" onclick="switchTab('finance')">経理</button>
-            <button class="tab-btn" onclick="switchTab('labor')">労務</button>
-            <button class="tab-btn" onclick="switchTab('recruiting')">採用</button>
-            <button class="tab-btn" onclick="switchTab('general')">総務</button>
+        <div class="tabs" id="tab-container">
+            <button class="tab-btn active" draggable="true" data-tab="favorites">📌 お気に入り</button>
+            <button class="tab-btn" draggable="true" data-tab="all">All</button>
+            <button class="tab-btn" draggable="true" data-tab="legal">法務</button>
+            <button class="tab-btn" draggable="true" data-tab="finance">経理</button>
+            <button class="tab-btn" draggable="true" data-tab="labor">労務</button>
+            <button class="tab-btn" draggable="true" data-tab="recruiting">採用</button>
+            <button class="tab-btn" draggable="true" data-tab="general">総務</button>
         </div>
 
         <div id="favorites" class="tab-content active">
@@ -281,7 +290,15 @@
         </div>
 
         <div id="legal" class="tab-content">
-            <div class="empty-message">No applications available in Legal.</div>
+            <div class="cards">
+                <a href="https://anfini-aix-team.github.io/Contract-Creation/" class="card" target="_blank" data-id="contract-creation">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'contract-creation')">📌</button>
+                    <div class="card-icon">📄</div>
+                    <h2 class="card-title">契約書自動作成</h2>
+                    <p class="card-desc">必要な情報を入力するだけで、契約書を自動で作成するアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+            </div>
         </div>
 
         <div id="finance" class="tab-content">
@@ -322,34 +339,35 @@
     </div>
 
     <script>
-        // お気に入りデータを保持する配列（LocalStorageから取得）
+        // データ保持（LocalStorageから取得）
         let favorites = JSON.parse(localStorage.getItem('aix_favorites')) || [];
 
         // ページ読み込み時の初期化
         document.addEventListener('DOMContentLoaded', () => {
+            restoreTabOrder();   // 保存されたタブの順番を復元
+            initSortableTabs();  // タブの並び替え機能を初期化
+            initTabClickEvents(); // タブのクリックイベントをバインド
             buildAllTab();       // 最初の一回だけ「All」タブを構築
             syncPinStates();     // お気に入りピンの見た目を同期
             updateFavoritesTab(); // お気に入りタブの表示更新
         });
 
-        // 「All」タブのカード一括生成（重複を防ぐためロード時の1回のみ実行）
+        // 「All」タブのカード一括生成
         function buildAllTab() {
             const allGrid = document.getElementById('all-grid');
             allGrid.innerHTML = '';
             
-            // 独自の部門別コンテンツ内にあるオリジナルのカードをすべて取得
             const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
             
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
                 const appId = clonedCard.getAttribute('data-id');
-                // クローンされたカードのピンボタンにイベントを再バインド
                 clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
                 allGrid.appendChild(clonedCard);
             });
         }
 
-        // ページ内すべてのカード（部門・All両方含む）のピン状態を同期する
+        // ページ内すべてのカードのピン状態を同期する
         function syncPinStates() {
             const allCardsInPage = document.querySelectorAll('.card[data-id]');
             allCardsInPage.forEach(card => {
@@ -368,7 +386,6 @@
             const favoritesEmpty = document.getElementById('favorites-empty');
             favoritesGrid.innerHTML = '';
 
-            // 部門別タブ内にあるオリジナルカードからお気に入りを抽出
             const favCards = [];
             favorites.forEach(id => {
                 const originalCard = document.querySelector(`.tab-content:not(#all):not(#favorites) .card[data-id="${id}"]`);
@@ -395,44 +412,141 @@
 
         // お気に入りのトグル処理
         function toggleFavorite(event, appId) {
-            event.preventDefault(); // 親要素の <a> タグによる画面遷移を防止
+            event.preventDefault(); 
             event.stopPropagation();
 
             const index = favorites.indexOf(appId);
             if (index > -1) {
-                // お気に入り解除
                 favorites.splice(index, 1);
             } else {
-                // お気に入り追加
                 favorites.push(appId);
             }
 
-            // ローカルストレージに保存
             localStorage.setItem('aix_favorites', JSON.stringify(favorites));
-
-            // 画面上の全ピンマークの状態同期と、お気に入りタブの更新だけを行う
             syncPinStates();
             updateFavoritesTab();
         }
 
+        // 各タブボタンへのクリックイベント割り当て
+        function initTabClickEvents() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    // ドラッグ直後の誤クリックを防ぐ
+                    if (button.classList.contains('dragging')) return;
+                    const tabId = button.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+        }
+
         // タブ切り替え処理
         function switchTab(tabId) {
-            // すべてのコンテンツを非表示にする
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
 
-            // すべて的タブボタンの選択状態を解除する
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(button => button.classList.remove('active'));
 
-            // 選択されたコンテンツとボタンをアクティブにする
-            document.getElementById(tabId).classList.add('active');
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) targetContent.classList.add('active');
             
-            // クリックされたボタンに active クラスを付与
-            const clickedButton = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(`'${tabId}'`));
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
+            const clickedButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            if (clickedButton) clickedButton.classList.add('active');
+        }
+
+        // --- タブ並び替え機能 (Drag and Drop / Touch Support) ---
+        function initSortableTabs() {
+            const container = document.getElementById('tab-container');
+            let dragEl = null;
+
+            // マウスドラッグ開始
+            container.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('tab-btn')) {
+                    dragEl = e.target;
+                    e.target.classList.add('dragging');
+                }
+            });
+
+            // マウスドラッグ中
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientX);
+                if (afterElement == null) {
+                    container.appendChild(dragEl);
+                } else {
+                    container.insertBefore(dragEl, afterElement);
+                }
+            });
+
+            // マウスドラッグ終了
+            container.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('tab-btn')) {
+                    e.target.classList.remove('dragging');
+                    saveTabOrder();
+                }
+            });
+
+            // スマホ等タッチ操作対応
+            container.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('tab-btn')) {
+                    dragEl = e.target;
+                    dragEl.classList.add('dragging');
+                }
+            }, {passive: true});
+
+            container.addEventListener('touchmove', (e) => {
+                if (!dragEl) return;
+                const touch = e.touches[0];
+                const afterElement = getDragAfterElement(container, touch.clientX);
+                if (afterElement == null) {
+                    container.appendChild(dragEl);
+                } else {
+                    container.insertBefore(dragEl, afterElement);
+                }
+            }, {passive: true});
+
+            container.addEventListener('touchend', (e) => {
+                if (dragEl) {
+                    dragEl.classList.remove('dragging');
+                    dragEl = null;
+                    saveTabOrder();
+                }
+            });
+        }
+
+        // 最も近い要素を判定するヘルパー関数
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.tab-btn:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // タブの並び順を保存
+        function saveTabOrder() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const order = Array.from(buttons).map(btn => btn.getAttribute('data-tab'));
+            localStorage.setItem('aix_tab_order', JSON.stringify(order));
+        }
+
+        // タブの並び順を復元
+        function restoreTabOrder() {
+            const savedOrder = JSON.parse(localStorage.getItem('aix_tab_order'));
+            if (!savedOrder) return;
+
+            const container = document.getElementById('tab-container');
+            savedOrder.forEach(tabId => {
+                const btn = container.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+                if (btn) container.appendChild(btn);
+            });
         }
     </script>
 </body>
