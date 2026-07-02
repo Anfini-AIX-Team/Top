@@ -33,7 +33,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         /* メインコンテンツを包むコンテナ */
@@ -46,15 +46,15 @@
 
         /* ヘッダー（タイトル部分）の設定 */
         header {
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         header h1 {
             font-size: 2.4rem;
-            font-weight: 300; /* 太すぎず洗練されたウェイトに */
+            font-weight: 300;
             margin: 0;
             color: var(--text-main);
-            letter-spacing: 6px; /* 文字間隔を広げてラグジュアリーに */
+            letter-spacing: 6px;
             text-transform: uppercase;
         }
 
@@ -68,6 +68,67 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
+        /* --- タブメニューのスタイル --- */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            padding: 8px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--accent-gold-light);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            background: rgba(197, 168, 128, 0.05);
+            font-weight: 600;
+        }
+
+        /* --- コンテンツ表示の制御 --- */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 空のタブ用メッセージ */
+        .empty-message {
+            color: var(--text-muted);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            padding: 60px 0;
+            font-style: italic;
+        }
+
         /* カードをまとめるラッパー */
         .cards {
             display: grid;
@@ -78,12 +139,11 @@
         /* カード本体のデザイン */
         .card {
             background: var(--card-bg);
-            border-radius: 8px; /* 角丸をシャープに抑える */
+            border-radius: 8px;
             padding: 40px 32px;
             text-decoration: none;
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            /* 滑らかでラグジュアリーな変遷効果 */
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             display: flex;
@@ -94,9 +154,9 @@
 
         /* マウスを乗せたとき（ホバー）のアニメーション */
         .card:hover {
-            transform: translateY(-4px); /* 浮き上がりは控えめにし、品を保つ */
-            border-color: var(--accent-gold); /* 枠線がゴールドに美しく光る */
-            background: #161e33; /* 背景を僅かに明るく */
+            transform: translateY(-4px);
+            border-color: var(--accent-gold);
+            background: #161e33;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
@@ -104,7 +164,7 @@
         .card-icon {
             font-size: 2.2rem;
             margin-bottom: 24px;
-            filter: grayscale(30%); /* 絵文字の彩度を少し落として馴染ませる */
+            filter: grayscale(30%);
         }
         
         .card-title {
@@ -114,6 +174,7 @@
             margin: 0 0 14px 0;
             letter-spacing: 0.5px;
             color: var(--text-main);
+            padding-right: 24px;
         }
         
         .card-desc {
@@ -136,15 +197,14 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: auto; /* ボタンを常に下部に固定 */
+            margin-top: auto;
             transition: color 0.3s;
         }
         
         .card:hover .card-link-text {
-            color: var(--accent-gold-light); /* ホバーで明るいゴールドに変化 */
+            color: var(--accent-gold-light);
         }
 
-        /* 矢印アイコンの洗練化（細い矢印に） */
         .card-link-text::after {
             content: "→";
             font-family: serif;
@@ -152,7 +212,32 @@
         }
         
         .card:hover .card-link-text::after {
-            transform: translateX(6px); /* 矢印が右に静かにスライド */
+            transform: translateX(6px);
+        }
+
+        /* お気に入りピンボタンのスタイル */
+        .pin-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: rgba(143, 160, 186, 0.3);
+            transition: all 0.2s ease;
+            z-index: 10;
+            padding: 4px;
+        }
+
+        .pin-btn:hover {
+            transform: scale(1.1);
+            color: var(--accent-gold-light);
+        }
+
+        .card.is-favorite .pin-btn {
+            color: var(--accent-gold);
+            filter: drop-shadow(0 0 4px rgba(197, 168, 128, 0.4));
         }
 
         /* フッター */
@@ -174,20 +259,61 @@
             <p>Apps Portal</p>
         </header>
 
-        <div class="cards">
-            <a href="https://anfini-aix-team.github.io/Event-Participant-Management/" class="card" target="_blank">
-                <div class="card-icon">📅</div>
-                <h2 class="card-title">イベント参加者変更管理</h2>
-                <p class="card-desc">選考イベントの参加者の増減を管理するためのアプリケーションです。</p>
-                <div class="card-link-text">Open App</div>
-            </a>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('favorites')">📌 お気に入り</button>
+            <button class="tab-btn" onclick="switchTab('all')">All</button>
+            <button class="tab-btn" onclick="switchTab('legal')">法務</button>
+            <button class="tab-btn" onclick="switchTab('finance')">経理</button>
+            <button class="tab-btn" onclick="switchTab('labor')">労務</button>
+            <button class="tab-btn" onclick="switchTab('recruiting')">採用</button>
+            <button class="tab-btn" onclick="switchTab('general')">総務</button>
+        </div>
 
-            <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank">
-                <div class="card-icon">✉️</div>
-                <h2 class="card-title">応募者メッセージ自動生成</h2>
-                <p class="card-desc">応募者へのパーソナライズされたメッセージをAIで簡単に作成するアプリケーションです。</p>
-                <div class="card-link-text">Open App</div>
-            </a>
+        <div id="favorites" class="tab-content active">
+            <div class="cards" id="favorites-grid">
+                </div>
+            <div class="empty-message" id="favorites-empty">No applications saved in Favorites.</div>
+        </div>
+
+        <div id="all" class="tab-content">
+            <div class="cards" id="all-grid">
+                </div>
+        </div>
+
+        <div id="legal" class="tab-content">
+            <div class="empty-message">No applications available in Legal.</div>
+        </div>
+
+        <div id="finance" class="tab-content">
+            <div class="empty-message">No applications available in Finance.</div>
+        </div>
+
+        <div id="labor" class="tab-content">
+            <div class="empty-message">No applications available in Labor Relations.</div>
+        </div>
+
+        <div id="recruiting" class="tab-content">
+            <div class="cards">
+                <a href="https://anfini-aix-team.github.io/Event-Participant-Management/" class="card" target="_blank" data-id="event-management">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'event-management')">📌</button>
+                    <div class="card-icon">📅</div>
+                    <h2 class="card-title">イベント参加者変更管理</h2>
+                    <p class="card-desc">選考イベントの参加者の増減を管理するためのアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+
+                <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank" data-id="message-generator">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'message-generator')">📌</button>
+                    <div class="card-icon">✉️</div>
+                    <h2 class="card-title">応募者メッセージ自動生成</h2>
+                    <p class="card-desc">応募者へのパーソナライズされたメッセージをAIで簡単に作成するアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="general" class="tab-content">
+            <div class="empty-message">No applications available in General Affairs.</div>
         </div>
 
         <footer>
@@ -195,5 +321,119 @@
         </footer>
     </div>
 
+    <script>
+        // お気に入りデータを保持する配列（LocalStorageから取得）
+        let favorites = JSON.parse(localStorage.getItem('aix_favorites')) || [];
+
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            buildAllTab();       // 最初の一回だけ「All」タブを構築
+            syncPinStates();     // お気に入りピンの見た目を同期
+            updateFavoritesTab(); // お気に入りタブの表示更新
+        });
+
+        // 「All」タブのカード一括生成（重複を防ぐためロード時の1回のみ実行）
+        function buildAllTab() {
+            const allGrid = document.getElementById('all-grid');
+            allGrid.innerHTML = '';
+            
+            // 独自の部門別コンテンツ内にあるオリジナルのカードをすべて取得
+            const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
+            
+            originalCards.forEach(card => {
+                const clonedCard = card.cloneNode(true);
+                const appId = clonedCard.getAttribute('data-id');
+                // クローンされたカードのピンボタンにイベントを再バインド
+                clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
+                allGrid.appendChild(clonedCard);
+            });
+        }
+
+        // ページ内すべてのカード（部門・All両方含む）のピン状態を同期する
+        function syncPinStates() {
+            const allCardsInPage = document.querySelectorAll('.card[data-id]');
+            allCardsInPage.forEach(card => {
+                const appId = card.getAttribute('data-id');
+                if (favorites.includes(appId)) {
+                    card.classList.add('is-favorite');
+                } else {
+                    card.classList.remove('is-favorite');
+                }
+            });
+        }
+
+        // お気に入りタブの表示を最新状態にする
+        function updateFavoritesTab() {
+            const favoritesGrid = document.getElementById('favorites-grid');
+            const favoritesEmpty = document.getElementById('favorites-empty');
+            favoritesGrid.innerHTML = '';
+
+            // 部門別タブ内にあるオリジナルカードからお気に入りを抽出
+            const favCards = [];
+            favorites.forEach(id => {
+                const originalCard = document.querySelector(`.tab-content:not(#all):not(#favorites) .card[data-id="${id}"]`);
+                if (originalCard) {
+                    favCards.push(originalCard);
+                }
+            });
+
+            if (favCards.length > 0) {
+                favoritesEmpty.style.display = 'none';
+                favoritesGrid.style.display = 'grid';
+                
+                favCards.forEach(card => {
+                    const clonedCard = card.cloneNode(true);
+                    const appId = clonedCard.getAttribute('data-id');
+                    clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
+                    favoritesGrid.appendChild(clonedCard);
+                });
+            } else {
+                favoritesGrid.style.display = 'none';
+                favoritesEmpty.style.display = 'block';
+            }
+        }
+
+        // お気に入りのトグル処理
+        function toggleFavorite(event, appId) {
+            event.preventDefault(); // 親要素の <a> タグによる画面遷移を防止
+            event.stopPropagation();
+
+            const index = favorites.indexOf(appId);
+            if (index > -1) {
+                // お気に入り解除
+                favorites.splice(index, 1);
+            } else {
+                // お気に入り追加
+                favorites.push(appId);
+            }
+
+            // ローカルストレージに保存
+            localStorage.setItem('aix_favorites', JSON.stringify(favorites));
+
+            // 画面上の全ピンマークの状態同期と、お気に入りタブの更新だけを行う
+            syncPinStates();
+            updateFavoritesTab();
+        }
+
+        // タブ切り替え処理
+        function switchTab(tabId) {
+            // すべてのコンテンツを非表示にする
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // すべて的タブボタンの選択状態を解除する
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // 選択されたコンテンツとボタンをアクティブにする
+            document.getElementById(tabId).classList.add('active');
+            
+            // クリックされたボタンに active クラスを付与
+            const clickedButton = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(`'${tabId}'`));
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+    </script>
 </body>
 </html>
