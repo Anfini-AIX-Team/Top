@@ -11,11 +11,11 @@
             --card-bg: #121829;        /* 落ち着いたトーンのカード背景 */
             --text-main: #ffffff;      /* 純白のメインテキスト */
             --text-muted: #8fa0ba;    /* 知的なシアン・グレーのサブテキスト */
-            --accent-gold: #c5a880;   /* 高級感のあるアンフィニ・ゴールド */
+            --accent-gold: #c5a880;   /* 高級感のあるアンフィニ・ゴールド（デフォルト） */
             --accent-gold-light: #dfc59f; /* ホバー用の明るいゴールド */
             --border-color: rgba(197, 168, 128, 0.15); /* ゴールドをベースにした極細ボーダー */
         }
-        
+
         * {
             box-sizing: border-box;
         }
@@ -24,8 +24,7 @@
         body {
             font-family: 'Times New Roman', "Yu Mincho", "遊明朝", "Hiragino Mincho ProN", serif;
             background: var(--bg-color);
-            /* 中央上部から静かに広がる繊細なグラデーション光 */
-            background-image: radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.08), transparent 60%);
+            background-image: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-gold) 8%, transparent), transparent 60%);
             color: var(--text-main);
             margin: 0;
             padding: 0;
@@ -34,19 +33,20 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* メインコンテンツを包むコンテナ */
         .portal-container {
             text-align: center;
             width: 100%;
             max-width: 960px;
             padding: 60px 24px;
+            position: relative;
         }
 
-        /* ヘッダー（タイトル部分）の設定 */
         header {
             margin-bottom: 40px;
+            position: relative;
         }
 
         header h1 {
@@ -68,6 +68,169 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
+        /* --- テーマカスタマイズ ボタン & パネル --- */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 4px;
+            right: 24px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            transform: rotate(25deg);
+        }
+
+        .theme-toggle-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-panel {
+            position: absolute;
+            top: 52px;
+            right: 24px;
+            width: 280px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+        }
+
+        .theme-panel.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .theme-panel-header span {
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .theme-panel-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+            display: flex;
+        }
+        .theme-panel-close svg { width: 16px; height: 16px; }
+        .theme-panel-close:hover { color: var(--accent-gold); }
+
+        .theme-section-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 14px 0 8px 0;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .preset-swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .preset-swatch:hover { transform: scale(1.1); }
+        .preset-swatch.selected { border-color: var(--text-main); }
+
+        .preset-swatch svg {
+            width: 12px;
+            height: 12px;
+            color: #fff;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.6));
+            opacity: 0;
+        }
+        .preset-swatch.selected svg { opacity: 1; }
+
+        .color-input-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .color-input-row label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .color-input-row input[type="color"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0;
+            background: none;
+            cursor: pointer;
+        }
+        .color-input-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+        .color-input-row input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+
+        .theme-reset-btn {
+            width: 100%;
+            margin-top: 16px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 9px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-reset-btn:hover {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+        }
+
         /* --- タブメニューのスタイル --- */
         .tabs {
             display: flex;
@@ -87,18 +250,22 @@
             font-size: 0.95rem;
             font-weight: 400;
             padding: 8px 20px;
-            cursor: grab; /* 並び替え可能であることを示す手袋アイコン */
+            cursor: grab;
             border-radius: 4px;
             letter-spacing: 1px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
         }
-        
-        /* ドラッグ中のスタイル */
+
+        .tab-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
         .tab-btn.dragging {
             opacity: 0.4;
             cursor: grabbing;
-            background: rgba(197, 168, 128, 0.1);
+            background: color-mix(in srgb, var(--accent-gold) 10%, transparent);
         }
 
         .tab-btn:hover {
@@ -108,7 +275,7 @@
         .tab-btn.active {
             color: var(--accent-gold);
             border-color: var(--accent-gold);
-            background: rgba(197, 168, 128, 0.05);
+            background: color-mix(in srgb, var(--accent-gold) 5%, transparent);
             font-weight: 600;
         }
 
@@ -127,7 +294,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 空のタブ用メッセージ */
         .empty-message {
             color: var(--text-muted);
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -137,14 +303,12 @@
             font-style: italic;
         }
 
-        /* カードをまとめるラッパー */
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
 
-        /* カード本体のデザイン */
         .card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -160,21 +324,30 @@
             text-align: left;
         }
 
-        /* マウスを乗せたとき（ホバー）のアニメーション */
         .card:hover {
             transform: translateY(-4px);
             border-color: var(--accent-gold);
-            background: #161e33;
+            background: color-mix(in srgb, var(--card-bg) 85%, var(--accent-gold) 15%);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
-        /* カード内のテキストやアイコンの設定 */
         .card-icon {
-            font-size: 2.2rem;
+            width: 42px;
+            height: 42px;
             margin-bottom: 24px;
-            filter: grayscale(30%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--accent-gold) 10%, transparent);
+            color: var(--accent-gold);
         }
-        
+
+        .card-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
         .card-title {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
             font-size: 1.35rem;
@@ -184,7 +357,7 @@
             color: var(--text-main);
             padding-right: 24px;
         }
-        
+
         .card-desc {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
             color: var(--text-muted);
@@ -194,7 +367,6 @@
             font-weight: 300;
         }
 
-        /* リンクボタン部分 */
         .card-link-text {
             color: var(--accent-gold);
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -208,7 +380,7 @@
             margin-top: auto;
             transition: color 0.3s;
         }
-        
+
         .card:hover .card-link-text {
             color: var(--accent-gold-light);
         }
@@ -218,7 +390,7 @@
             font-family: serif;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         .card:hover .card-link-text::after {
             transform: translateX(6px);
         }
@@ -230,26 +402,34 @@
             right: 24px;
             background: transparent;
             border: none;
-            font-size: 1.2rem;
             cursor: pointer;
-            color: rgba(143, 160, 186, 0.3); /* 通常時は薄いグレー */
+            color: color-mix(in srgb, var(--text-muted) 55%, transparent);
             transition: all 0.2s ease;
             z-index: 10;
             padding: 4px;
+            display: flex;
         }
 
-        /* 【修正】ホバー時は少し大きくなるだけで、明るく（ゴールドに）はならない */
+        .pin-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            transition: fill 0.2s ease;
+        }
+
         .pin-btn:hover {
             transform: scale(1.1);
         }
 
-        /* 【修正】クリックしてお気に入り状態になった時のみゴールドに点灯 */
         .card.is-favorite .pin-btn {
             color: var(--accent-gold);
-            filter: drop-shadow(0 0 4px rgba(197, 168, 128, 0.4));
+            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent-gold) 40%, transparent));
         }
 
-        /* フッター */
+        .card.is-favorite .pin-btn svg {
+            fill: var(--accent-gold);
+        }
+
         footer {
             margin-top: 80px;
             color: var(--text-muted);
@@ -257,6 +437,10 @@
             font-size: 0.75rem;
             letter-spacing: 1.5px;
             opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .theme-panel { width: calc(100vw - 48px); right: 0; }
         }
     </style>
 </head>
@@ -266,10 +450,41 @@
         <header>
             <h1>Anfini AIX</h1>
             <p>Apps Portal</p>
+
+            <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="テーマカラーを変更">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+            </button>
+
+            <div class="theme-panel" id="theme-panel">
+                <div class="theme-panel-header">
+                    <span>テーマカラー</span>
+                    <button class="theme-panel-close" id="theme-panel-close" aria-label="閉じる">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+
+                <div class="theme-section-label">プリセット</div>
+                <div class="preset-grid" id="preset-grid"></div>
+
+                <div class="theme-section-label">カスタムカラー</div>
+                <div class="color-input-row">
+                    <label for="accent-input">アクセント</label>
+                    <input type="color" id="accent-input" value="#c5a880">
+                </div>
+                <div class="color-input-row">
+                    <label for="bg-input">背景</label>
+                    <input type="color" id="bg-input" value="#0a0f1d">
+                </div>
+
+                <button class="theme-reset-btn" id="theme-reset-btn">デフォルトに戻す</button>
+            </div>
         </header>
 
         <div class="tabs" id="tab-container">
-            <button class="tab-btn active" draggable="true" data-tab="favorites">📌 お気に入り</button>
+            <button class="tab-btn active" draggable="true" data-tab="favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                お気に入り
+            </button>
             <button class="tab-btn" draggable="true" data-tab="all">All</button>
             <button class="tab-btn" draggable="true" data-tab="legal">法務</button>
             <button class="tab-btn" draggable="true" data-tab="finance">経理</button>
@@ -292,8 +507,12 @@
         <div id="legal" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Contract-Creation/" class="card" target="_blank" data-id="contract-creation">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'contract-creation')">📌</button>
-                    <div class="card-icon">📄</div>
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'contract-creation')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                    </div>
                     <h2 class="card-title">契約書自動作成</h2>
                     <p class="card-desc">必要な情報を入力するだけで、契約書を自動で作成するアプリケーションです。</p>
                     <div class="card-link-text">Open App</div>
@@ -312,16 +531,24 @@
         <div id="recruiting" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Event-Participant-Management/" class="card" target="_blank" data-id="event-management">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'event-management')">📌</button>
-                    <div class="card-icon">📅</div>
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'event-management')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                    </div>
                     <h2 class="card-title">イベント参加者変更管理</h2>
                     <p class="card-desc">選考イベントの参加者の増減を管理するためのアプリケーションです。</p>
                     <div class="card-link-text">Open App</div>
                 </a>
 
                 <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank" data-id="message-generator">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'message-generator')">📌</button>
-                    <div class="card-icon">✉️</div>
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'message-generator')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </div>
                     <h2 class="card-title">応募者メッセージ自動生成</h2>
                     <p class="card-desc">応募者へのパーソナライズされたメッセージをAIで簡単に作成するアプリケーションです。</p>
                     <div class="card-link-text">Open App</div>
@@ -342,23 +569,35 @@
         // データ保持（LocalStorageから取得）
         let favorites = JSON.parse(localStorage.getItem('aix_favorites')) || [];
 
+        const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+        const DEFAULT_THEME = { accent: '#c5a880', bg: '#0a0f1d' };
+
+        const PRESETS = [
+            { name: 'ゴールドノワール', accent: '#c5a880', bg: '#0a0f1d' },
+            { name: 'エメラルド', accent: '#5fae8c', bg: '#0a1410' },
+            { name: 'サファイア', accent: '#6f9fd8', bg: '#0a0e1a' },
+            { name: 'ルビー', accent: '#c97b7b', bg: '#170a0d' },
+            { name: 'シルバーライト', accent: '#8a8f99', bg: '#f4f4f6' }
+        ];
+
         // ページ読み込み時の初期化
         document.addEventListener('DOMContentLoaded', () => {
-            restoreTabOrder();   // 保存されたタブの順番を復元
-            initSortableTabs();  // タブの並び替え機能を初期化
-            initTabClickEvents(); // タブのクリックイベントをバインド
-            buildAllTab();       // 最初の一回だけ「All」タブを構築
-            syncPinStates();     // お気に入りピンの見た目を同期
-            updateFavoritesTab(); // お気に入りタブの表示更新
+            restoreTabOrder();
+            initSortableTabs();
+            initTabClickEvents();
+            buildAllTab();
+            syncPinStates();
+            updateFavoritesTab();
+            initThemeCustomizer();
         });
 
-        // 「All」タブのカード一括生成
         function buildAllTab() {
             const allGrid = document.getElementById('all-grid');
             allGrid.innerHTML = '';
-            
+
             const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
-            
+
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
                 const appId = clonedCard.getAttribute('data-id');
@@ -367,7 +606,6 @@
             });
         }
 
-        // ページ内すべてのカードのピン状態を同期する
         function syncPinStates() {
             const allCardsInPage = document.querySelectorAll('.card[data-id]');
             allCardsInPage.forEach(card => {
@@ -380,7 +618,6 @@
             });
         }
 
-        // お気に入りタブの表示を最新状態にする
         function updateFavoritesTab() {
             const favoritesGrid = document.getElementById('favorites-grid');
             const favoritesEmpty = document.getElementById('favorites-empty');
@@ -397,7 +634,7 @@
             if (favCards.length > 0) {
                 favoritesEmpty.style.display = 'none';
                 favoritesGrid.style.display = 'grid';
-                
+
                 favCards.forEach(card => {
                     const clonedCard = card.cloneNode(true);
                     const appId = clonedCard.getAttribute('data-id');
@@ -410,9 +647,8 @@
             }
         }
 
-        // お気に入りのトグル処理
         function toggleFavorite(event, appId) {
-            event.preventDefault(); 
+            event.preventDefault();
             event.stopPropagation();
 
             const index = favorites.indexOf(appId);
@@ -427,12 +663,10 @@
             updateFavoritesTab();
         }
 
-        // 各タブボタンへのクリックイベント割り当て
         function initTabClickEvents() {
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(button => {
                 button.addEventListener('click', (e) => {
-                    // ドラッグ直後の誤クリックを防ぐ
                     if (button.classList.contains('dragging')) return;
                     const tabId = button.getAttribute('data-tab');
                     switchTab(tabId);
@@ -440,7 +674,6 @@
             });
         }
 
-        // タブ切り替え処理
         function switchTab(tabId) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
@@ -450,7 +683,7 @@
 
             const targetContent = document.getElementById(tabId);
             if (targetContent) targetContent.classList.add('active');
-            
+
             const clickedButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
             if (clickedButton) clickedButton.classList.add('active');
         }
@@ -460,7 +693,6 @@
             const container = document.getElementById('tab-container');
             let dragEl = null;
 
-            // マウスドラッグ開始
             container.addEventListener('dragstart', (e) => {
                 if (e.target.classList.contains('tab-btn')) {
                     dragEl = e.target;
@@ -468,7 +700,6 @@
                 }
             });
 
-            // マウスドラッグ中
             container.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 const afterElement = getDragAfterElement(container, e.clientX);
@@ -479,7 +710,6 @@
                 }
             });
 
-            // マウスドラッグ終了
             container.addEventListener('dragend', (e) => {
                 if (e.target.classList.contains('tab-btn')) {
                     e.target.classList.remove('dragging');
@@ -487,7 +717,6 @@
                 }
             });
 
-            // スマホ等タッチ操作対応
             container.addEventListener('touchstart', (e) => {
                 if (e.target.classList.contains('tab-btn')) {
                     dragEl = e.target;
@@ -515,7 +744,6 @@
             });
         }
 
-        // 最も近い要素を判定するヘルパー関数
         function getDragAfterElement(container, x) {
             const draggableElements = [...container.querySelectorAll('.tab-btn:not(.dragging)')];
 
@@ -530,14 +758,12 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        // タブの並び順を保存
         function saveTabOrder() {
             const buttons = document.querySelectorAll('.tab-btn');
             const order = Array.from(buttons).map(btn => btn.getAttribute('data-tab'));
             localStorage.setItem('aix_tab_order', JSON.stringify(order));
         }
 
-        // タブの並び順を復元
         function restoreTabOrder() {
             const savedOrder = JSON.parse(localStorage.getItem('aix_tab_order'));
             if (!savedOrder) return;
@@ -546,6 +772,127 @@
             savedOrder.forEach(tabId => {
                 const btn = container.querySelector(`.tab-btn[data-tab="${tabId}"]`);
                 if (btn) container.appendChild(btn);
+            });
+        }
+
+        // --- テーマカラーのカスタマイズ機能 ---
+
+        function shadeColor(hex, percent) {
+            hex = hex.replace('#', '');
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+            r = Math.min(255, Math.max(0, r + (percent / 100) * 255));
+            g = Math.min(255, Math.max(0, g + (percent / 100) * 255));
+            b = Math.min(255, Math.max(0, b + (percent / 100) * 255));
+            return '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+        }
+
+        function getLuminance(hex) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16) / 255;
+            const g = parseInt(hex.substring(2, 4), 16) / 255;
+            const b = parseInt(hex.substring(4, 6), 16) / 255;
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        function hexToRgba(hex, alpha) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function applyTheme(accent, bg, save = true) {
+            const root = document.documentElement.style;
+            const isDark = getLuminance(bg) < 0.5;
+
+            const cardBg = isDark ? shadeColor(bg, 6) : shadeColor(bg, -4);
+            const textMain = isDark ? '#ffffff' : '#1a1f2b';
+            const textMuted = isDark ? '#8fa0ba' : '#5f6b7a';
+            const accentLight = shadeColor(accent, isDark ? 20 : -18);
+
+            root.setProperty('--bg-color', bg);
+            root.setProperty('--card-bg', cardBg);
+            root.setProperty('--text-main', textMain);
+            root.setProperty('--text-muted', textMuted);
+            root.setProperty('--accent-gold', accent);
+            root.setProperty('--accent-gold-light', accentLight);
+            root.setProperty('--border-color', hexToRgba(accent, 0.15));
+
+            document.getElementById('accent-input').value = accent;
+            document.getElementById('bg-input').value = bg;
+
+            if (save) {
+                localStorage.setItem('aix_theme', JSON.stringify({ accent, bg }));
+            }
+            updatePresetSelection(accent, bg);
+        }
+
+        function updatePresetSelection(accent, bg) {
+            document.querySelectorAll('.preset-swatch').forEach(el => {
+                const match = el.dataset.accent.toLowerCase() === accent.toLowerCase() &&
+                              el.dataset.bg.toLowerCase() === bg.toLowerCase();
+                el.classList.toggle('selected', match);
+            });
+        }
+
+        function buildPresetGrid() {
+            const grid = document.getElementById('preset-grid');
+            grid.innerHTML = '';
+            PRESETS.forEach(preset => {
+                const btn = document.createElement('button');
+                btn.className = 'preset-swatch';
+                btn.type = 'button';
+                btn.title = preset.name;
+                btn.dataset.accent = preset.accent;
+                btn.dataset.bg = preset.bg;
+                btn.style.background = `linear-gradient(135deg, ${preset.accent} 50%, ${preset.bg} 50%)`;
+                btn.innerHTML = CHECK_ICON;
+                btn.addEventListener('click', () => applyTheme(preset.accent, preset.bg));
+                grid.appendChild(btn);
+            });
+        }
+
+        function initThemeCustomizer() {
+            buildPresetGrid();
+
+            const saved = JSON.parse(localStorage.getItem('aix_theme'));
+            const initial = saved || DEFAULT_THEME;
+            applyTheme(initial.accent, initial.bg, false);
+
+            const toggleBtn = document.getElementById('theme-toggle-btn');
+            const panel = document.getElementById('theme-panel');
+            const closeBtn = document.getElementById('theme-panel-close');
+            const accentInput = document.getElementById('accent-input');
+            const bgInput = document.getElementById('bg-input');
+            const resetBtn = document.getElementById('theme-reset-btn');
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('open');
+            });
+
+            closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+            document.addEventListener('click', (e) => {
+                if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== toggleBtn) {
+                    panel.classList.remove('open');
+                }
+            });
+
+            accentInput.addEventListener('input', () => {
+                applyTheme(accentInput.value, bgInput.value);
+            });
+
+            bgInput.addEventListener('input', () => {
+                applyTheme(accentInput.value, bgInput.value);
+            });
+
+            resetBtn.addEventListener('click', () => {
+                localStorage.removeItem('aix_theme');
+                applyTheme(DEFAULT_THEME.accent, DEFAULT_THEME.bg);
             });
         }
     </script>
