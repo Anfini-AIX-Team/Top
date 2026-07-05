@@ -10,6 +10,7 @@
             --bg-color: #1c1c1c;       /* コーポレートサイトに合わせたグレートーンの黒 */
             --card-bg: #242424;        /* 落ち着いたトーンのカード背景 */
             --text-main: #ffffff;      /* 純白のメインテキスト */
+            --text-secondary: #d0d0d2; /* タブ・説明文用のグレーがかった白 */
             --text-muted: #9a9a9e;    /* モノクロームのサブテキスト */
             --accent-gold: #a8a8ac;   /* グレートーンのアクセント（デフォルト） */
             --accent-gold-light: #c4c4c8; /* ホバー用の明るいグレー */
@@ -354,7 +355,7 @@
         .tab-btn {
             background: transparent;
             border: 1px solid transparent;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
             font-size: 0.95rem;
             font-weight: 400;
@@ -469,7 +470,7 @@
 
         .card-desc {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.92rem;
             line-height: 1.7;
             margin: 0 0 32px 0;
@@ -817,12 +818,14 @@
 
             const cardBg = isDark ? shadeColor(bg, 6) : shadeColor(bg, -4);
             const textMain = isDark ? '#ffffff' : '#1a1f2b';
+            const textSecondary = isDark ? '#d0d0d2' : '#4a4a4e';
             const textMuted = isDark ? '#8fa0ba' : '#5f6b7a';
             const accentLight = shadeColor(accent, isDark ? 20 : -18);
 
             root.setProperty('--bg-color', bg);
             root.setProperty('--card-bg', cardBg);
             root.setProperty('--text-main', textMain);
+            root.setProperty('--text-secondary', textSecondary);
             root.setProperty('--text-muted', textMuted);
             root.setProperty('--accent-gold', accent);
             root.setProperty('--accent-gold-light', accentLight);
