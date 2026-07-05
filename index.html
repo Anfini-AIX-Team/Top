@@ -505,6 +505,41 @@
             transform: translateX(6px);
         }
 
+        /* お気に入りピンボタンのスタイル */
+        .pin-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: color-mix(in srgb, var(--text-muted) 55%, transparent);
+            transition: all 0.2s ease;
+            z-index: 10;
+            padding: 4px;
+            display: flex;
+        }
+
+        .pin-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            transition: fill 0.2s ease;
+        }
+
+        .pin-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .card.is-favorite .pin-btn {
+            color: var(--accent-gold);
+            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent-gold) 40%, transparent));
+        }
+
+        .card.is-favorite .pin-btn svg {
+            fill: var(--accent-gold);
+        }
+
         footer {
             margin-top: 80px;
             color: var(--text-muted);
@@ -566,7 +601,11 @@
         </header>
 
         <div class="tabs" id="tab-container">
-            <button class="tab-btn active" draggable="true" data-tab="all">All</button>
+            <button class="tab-btn active" draggable="true" data-tab="favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                お気に入り
+            </button>
+            <button class="tab-btn" draggable="true" data-tab="all">All</button>
             <button class="tab-btn" draggable="true" data-tab="legal">法務</button>
             <button class="tab-btn" draggable="true" data-tab="finance">経理</button>
             <button class="tab-btn" draggable="true" data-tab="labor">労務</button>
@@ -574,7 +613,13 @@
             <button class="tab-btn" draggable="true" data-tab="general">総務</button>
         </div>
 
-        <div id="all" class="tab-content active">
+        <div id="favorites" class="tab-content active">
+            <div class="cards" id="favorites-grid">
+                </div>
+            <div class="empty-message" id="favorites-empty">No applications saved in Favorites.</div>
+        </div>
+
+        <div id="all" class="tab-content">
             <div class="cards" id="all-grid">
                 </div>
         </div>
@@ -582,6 +627,9 @@
         <div id="legal" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Contract-Creation/" class="card" target="_blank" data-id="contract-creation">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'contract-creation')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
                     </div>
@@ -603,6 +651,9 @@
         <div id="recruiting" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Event-Participant-Management/" class="card" target="_blank" data-id="event-management">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'event-management')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                     </div>
@@ -612,6 +663,9 @@
                 </a>
 
                 <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank" data-id="message-generator">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'message-generator')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                     </div>
@@ -632,6 +686,9 @@
     </div>
 
     <script>
+        // データ保持（LocalStorageから取得）
+        let favorites = JSON.parse(localStorage.getItem('aix_favorites')) || [];
+
         const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
         const DELETE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
@@ -656,6 +713,8 @@
             initSortableTabs();
             initTabClickEvents();
             buildAllTab();
+            syncPinStates();
+            updateFavoritesTab();
             initThemeCustomizer();
         });
 
@@ -663,12 +722,71 @@
             const allGrid = document.getElementById('all-grid');
             allGrid.innerHTML = '';
 
-            const originalCards = document.querySelectorAll('.tab-content:not(#all) .card[data-id]');
+            const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
 
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
+                const appId = clonedCard.getAttribute('data-id');
+                clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
                 allGrid.appendChild(clonedCard);
             });
+        }
+
+        function syncPinStates() {
+            const allCardsInPage = document.querySelectorAll('.card[data-id]');
+            allCardsInPage.forEach(card => {
+                const appId = card.getAttribute('data-id');
+                if (favorites.includes(appId)) {
+                    card.classList.add('is-favorite');
+                } else {
+                    card.classList.remove('is-favorite');
+                }
+            });
+        }
+
+        function updateFavoritesTab() {
+            const favoritesGrid = document.getElementById('favorites-grid');
+            const favoritesEmpty = document.getElementById('favorites-empty');
+            favoritesGrid.innerHTML = '';
+
+            const favCards = [];
+            favorites.forEach(id => {
+                const originalCard = document.querySelector(`.tab-content:not(#all):not(#favorites) .card[data-id="${id}"]`);
+                if (originalCard) {
+                    favCards.push(originalCard);
+                }
+            });
+
+            if (favCards.length > 0) {
+                favoritesEmpty.style.display = 'none';
+                favoritesGrid.style.display = 'grid';
+
+                favCards.forEach(card => {
+                    const clonedCard = card.cloneNode(true);
+                    const appId = clonedCard.getAttribute('data-id');
+                    clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
+                    favoritesGrid.appendChild(clonedCard);
+                });
+            } else {
+                favoritesGrid.style.display = 'none';
+                favoritesEmpty.style.display = 'block';
+            }
+        }
+
+        function toggleFavorite(event, appId) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const index = favorites.indexOf(appId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(appId);
+            }
+
+            localStorage.setItem('aix_favorites', JSON.stringify(favorites));
+            syncPinStates();
+            updateFavoritesTab();
         }
 
         function initTabClickEvents() {
