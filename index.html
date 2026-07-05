@@ -8,7 +8,7 @@
         /* Anfini コーポレートトーンのカラー定義 */
         :root {
             --bg-color: #1c1c1c;       /* コーポレートサイトに合わせたグレートーンの黒 */
-            --card-bg: #242424;        /* 落ち着いたトーンのカード背景 */
+            --card-bg: #232323;        /* 落ち着いたトーンのカード背景 */
             --text-main: #ffffff;      /* 純白のメインテキスト */
             --text-secondary: #d0d0d2; /* タブ・説明文用のグレーがかった白 */
             --text-muted: #9a9a9e;    /* モノクロームのサブテキスト */
@@ -934,7 +934,7 @@
             const root = document.documentElement.style;
             const isDark = getLuminance(bg) < 0.5;
 
-            const cardBg = isDark ? shadeColor(bg, 6) : shadeColor(bg, -4);
+            const cardBg = isDark ? shadeColor(bg, 3) : shadeColor(bg, -2);
             const textMain = isDark ? '#ffffff' : '#1a1f2b';
             const textSecondary = isDark ? '#d0d0d2' : '#4a4a4e';
             const textMuted = isDark ? '#8fa0ba' : '#5f6b7a';
