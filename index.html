@@ -7,13 +7,13 @@
     <style>
         /* Anfini コーポレートトーンのカラー定義 */
         :root {
-            --bg-color: #0a0f1d;       /* 深みのある洗練されたダークネイビーブラック */
-            --card-bg: #121829;        /* 落ち着いたトーンのカード背景 */
+            --bg-color: #1c1c1c;       /* コーポレートサイトに合わせたグレートーンの黒 */
+            --card-bg: #242424;        /* 落ち着いたトーンのカード背景 */
             --text-main: #ffffff;      /* 純白のメインテキスト */
-            --text-muted: #8fa0ba;    /* 知的なシアン・グレーのサブテキスト */
-            --accent-gold: #c5a880;   /* 高級感のあるアンフィニ・ゴールド（デフォルト） */
-            --accent-gold-light: #dfc59f; /* ホバー用の明るいゴールド */
-            --border-color: rgba(197, 168, 128, 0.15); /* ゴールドをベースにした極細ボーダー */
+            --text-muted: #9a9a9e;    /* モノクロームのサブテキスト */
+            --accent-gold: #a8a8ac;   /* グレートーンのアクセント（デフォルト） */
+            --accent-gold-light: #c4c4c8; /* ホバー用の明るいグレー */
+            --border-color: rgba(168, 168, 172, 0.15); /* アクセントをベースにした極細ボーダー */
         }
 
         * {
@@ -114,6 +114,8 @@
             transform: translateY(-8px);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .theme-panel.open {
@@ -154,6 +156,9 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             margin: 14px 0 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .preset-grid {
@@ -173,6 +178,7 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.2s ease, border-color 0.2s ease;
+            padding: 0;
         }
 
         .preset-swatch:hover { transform: scale(1.1); }
@@ -229,6 +235,109 @@
         .theme-reset-btn:hover {
             color: var(--accent-gold);
             border-color: var(--accent-gold);
+        }
+
+        /* --- お気に入りパレット --- */
+        .fav-count-badge {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0;
+            text-transform: none;
+            opacity: 0.7;
+        }
+
+        .favorite-palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .favorite-palette-empty {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            font-style: italic;
+            padding: 6px 0 2px 0;
+        }
+
+        .fav-swatch-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+        }
+
+        .fav-swatch {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            padding: 0;
+        }
+
+        .fav-swatch:hover { transform: scale(1.1); }
+        .fav-swatch.selected { border-color: var(--text-main); }
+
+        .fav-swatch svg {
+            width: 12px;
+            height: 12px;
+            color: #fff;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.6));
+            opacity: 0;
+        }
+        .fav-swatch.selected svg { opacity: 1; }
+
+        .fav-delete-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2a1414;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #e2a1a1;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            line-height: 0;
+        }
+        .fav-delete-btn svg { width: 9px; height: 9px; }
+        .fav-swatch-wrap:hover .fav-delete-btn { display: flex; }
+        .fav-delete-btn:hover { background: #4a1c1c; color: #ffb3b3; }
+
+        .theme-save-btn {
+            width: 100%;
+            margin-top: 12px;
+            background: color-mix(in srgb, var(--accent-gold) 12%, transparent);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 9px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+        .theme-save-btn:hover {
+            background: color-mix(in srgb, var(--accent-gold) 22%, transparent);
+        }
+        .theme-save-btn:disabled {
+            opacity: 0.45;
+            cursor: default;
+            background: transparent;
         }
 
         /* --- タブメニューのスタイル --- */
@@ -395,41 +504,6 @@
             transform: translateX(6px);
         }
 
-        /* お気に入りピンボタンのスタイル */
-        .pin-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: color-mix(in srgb, var(--text-muted) 55%, transparent);
-            transition: all 0.2s ease;
-            z-index: 10;
-            padding: 4px;
-            display: flex;
-        }
-
-        .pin-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            transition: fill 0.2s ease;
-        }
-
-        .pin-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .card.is-favorite .pin-btn {
-            color: var(--accent-gold);
-            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent-gold) 40%, transparent));
-        }
-
-        .card.is-favorite .pin-btn svg {
-            fill: var(--accent-gold);
-        }
-
         footer {
             margin-top: 80px;
             color: var(--text-muted);
@@ -469,23 +543,29 @@
                 <div class="theme-section-label">カスタムカラー</div>
                 <div class="color-input-row">
                     <label for="accent-input">アクセント</label>
-                    <input type="color" id="accent-input" value="#c5a880">
+                    <input type="color" id="accent-input" value="#a8a8ac">
                 </div>
                 <div class="color-input-row">
                     <label for="bg-input">背景</label>
-                    <input type="color" id="bg-input" value="#0a0f1d">
+                    <input type="color" id="bg-input" value="#1c1c1c">
                 </div>
+
+                <div class="theme-section-label">
+                    <span>お気に入りパレット</span>
+                    <span class="fav-count-badge" id="fav-count-badge"></span>
+                </div>
+                <div class="favorite-palette-grid" id="favorite-palette-grid"></div>
+                <div class="favorite-palette-empty" id="favorite-palette-empty">保存された配色はまだありません。</div>
+                <button class="theme-save-btn" id="theme-save-btn" type="button">
+                    現在の配色を保存
+                </button>
 
                 <button class="theme-reset-btn" id="theme-reset-btn">デフォルトに戻す</button>
             </div>
         </header>
 
         <div class="tabs" id="tab-container">
-            <button class="tab-btn active" draggable="true" data-tab="favorites">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                お気に入り
-            </button>
-            <button class="tab-btn" draggable="true" data-tab="all">All</button>
+            <button class="tab-btn active" draggable="true" data-tab="all">All</button>
             <button class="tab-btn" draggable="true" data-tab="legal">法務</button>
             <button class="tab-btn" draggable="true" data-tab="finance">経理</button>
             <button class="tab-btn" draggable="true" data-tab="labor">労務</button>
@@ -493,13 +573,7 @@
             <button class="tab-btn" draggable="true" data-tab="general">総務</button>
         </div>
 
-        <div id="favorites" class="tab-content active">
-            <div class="cards" id="favorites-grid">
-                </div>
-            <div class="empty-message" id="favorites-empty">No applications saved in Favorites.</div>
-        </div>
-
-        <div id="all" class="tab-content">
+        <div id="all" class="tab-content active">
             <div class="cards" id="all-grid">
                 </div>
         </div>
@@ -507,9 +581,6 @@
         <div id="legal" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Contract-Creation/" class="card" target="_blank" data-id="contract-creation">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'contract-creation')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
                     </div>
@@ -531,9 +602,6 @@
         <div id="recruiting" class="tab-content">
             <div class="cards">
                 <a href="https://anfini-aix-team.github.io/Event-Participant-Management/" class="card" target="_blank" data-id="event-management">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'event-management')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                     </div>
@@ -543,9 +611,6 @@
                 </a>
 
                 <a href="https://anfini-aix-team.github.io/Personal-Message-Generator/" class="card" target="_blank" data-id="message-generator">
-                    <button class="pin-btn" onclick="toggleFavorite(event, 'message-generator')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                    </button>
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                     </div>
@@ -566,20 +631,23 @@
     </div>
 
     <script>
-        // データ保持（LocalStorageから取得）
-        let favorites = JSON.parse(localStorage.getItem('aix_favorites')) || [];
-
         const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+        const DELETE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
-        const DEFAULT_THEME = { accent: '#c5a880', bg: '#0a0f1d' };
+        const DEFAULT_THEME = { accent: '#a8a8ac', bg: '#1c1c1c' };
+        const FAVORITE_PALETTES_KEY = 'aix_favorite_palettes';
+        const MAX_FAVORITE_PALETTES = 15;
 
         const PRESETS = [
+            { name: 'モノクローム', accent: '#a8a8ac', bg: '#1c1c1c' },
             { name: 'ゴールドノワール', accent: '#c5a880', bg: '#0a0f1d' },
-            { name: 'エメラルド', accent: '#5fae8c', bg: '#0a1410' },
             { name: 'サファイア', accent: '#6f9fd8', bg: '#0a0e1a' },
             { name: 'ルビー', accent: '#c97b7b', bg: '#170a0d' },
             { name: 'シルバーライト', accent: '#8a8f99', bg: '#f4f4f6' }
         ];
+
+        // お気に入りパレット（ユーザーが保存したカスタム配色）
+        let favoritePalettes = JSON.parse(localStorage.getItem(FAVORITE_PALETTES_KEY)) || [];
 
         // ページ読み込み時の初期化
         document.addEventListener('DOMContentLoaded', () => {
@@ -587,8 +655,6 @@
             initSortableTabs();
             initTabClickEvents();
             buildAllTab();
-            syncPinStates();
-            updateFavoritesTab();
             initThemeCustomizer();
         });
 
@@ -596,71 +662,12 @@
             const allGrid = document.getElementById('all-grid');
             allGrid.innerHTML = '';
 
-            const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
+            const originalCards = document.querySelectorAll('.tab-content:not(#all) .card[data-id]');
 
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
-                const appId = clonedCard.getAttribute('data-id');
-                clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
                 allGrid.appendChild(clonedCard);
             });
-        }
-
-        function syncPinStates() {
-            const allCardsInPage = document.querySelectorAll('.card[data-id]');
-            allCardsInPage.forEach(card => {
-                const appId = card.getAttribute('data-id');
-                if (favorites.includes(appId)) {
-                    card.classList.add('is-favorite');
-                } else {
-                    card.classList.remove('is-favorite');
-                }
-            });
-        }
-
-        function updateFavoritesTab() {
-            const favoritesGrid = document.getElementById('favorites-grid');
-            const favoritesEmpty = document.getElementById('favorites-empty');
-            favoritesGrid.innerHTML = '';
-
-            const favCards = [];
-            favorites.forEach(id => {
-                const originalCard = document.querySelector(`.tab-content:not(#all):not(#favorites) .card[data-id="${id}"]`);
-                if (originalCard) {
-                    favCards.push(originalCard);
-                }
-            });
-
-            if (favCards.length > 0) {
-                favoritesEmpty.style.display = 'none';
-                favoritesGrid.style.display = 'grid';
-
-                favCards.forEach(card => {
-                    const clonedCard = card.cloneNode(true);
-                    const appId = clonedCard.getAttribute('data-id');
-                    clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
-                    favoritesGrid.appendChild(clonedCard);
-                });
-            } else {
-                favoritesGrid.style.display = 'none';
-                favoritesEmpty.style.display = 'block';
-            }
-        }
-
-        function toggleFavorite(event, appId) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const index = favorites.indexOf(appId);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(appId);
-            }
-
-            localStorage.setItem('aix_favorites', JSON.stringify(favorites));
-            syncPinStates();
-            updateFavoritesTab();
         }
 
         function initTabClickEvents() {
@@ -827,15 +834,32 @@
             if (save) {
                 localStorage.setItem('aix_theme', JSON.stringify({ accent, bg }));
             }
-            updatePresetSelection(accent, bg);
+            updateSelectionHighlights(accent, bg);
+            updateSaveButtonState(accent, bg);
         }
 
-        function updatePresetSelection(accent, bg) {
+        function isSameColorPair(accentA, bgA, accentB, bgB) {
+            return accentA.toLowerCase() === accentB.toLowerCase() &&
+                   bgA.toLowerCase() === bgB.toLowerCase();
+        }
+
+        function updateSelectionHighlights(accent, bg) {
             document.querySelectorAll('.preset-swatch').forEach(el => {
-                const match = el.dataset.accent.toLowerCase() === accent.toLowerCase() &&
-                              el.dataset.bg.toLowerCase() === bg.toLowerCase();
+                const match = isSameColorPair(el.dataset.accent, el.dataset.bg, accent, bg);
                 el.classList.toggle('selected', match);
             });
+            document.querySelectorAll('.fav-swatch').forEach(el => {
+                const match = isSameColorPair(el.dataset.accent, el.dataset.bg, accent, bg);
+                el.classList.toggle('selected', match);
+            });
+        }
+
+        function updateSaveButtonState(accent, bg) {
+            const saveBtn = document.getElementById('theme-save-btn');
+            if (!saveBtn) return;
+            const alreadySaved = favoritePalettes.some(p => isSameColorPair(p.accent, p.bg, accent, bg));
+            saveBtn.disabled = alreadySaved;
+            saveBtn.textContent = alreadySaved ? '保存済み' : '現在の配色を保存';
         }
 
         function buildPresetGrid() {
@@ -855,8 +879,100 @@
             });
         }
 
+        // --- お気に入りパレットの管理 ---
+
+        function saveFavoritePalettes() {
+            localStorage.setItem(FAVORITE_PALETTES_KEY, JSON.stringify(favoritePalettes));
+        }
+
+        function renderFavoritePalettes() {
+            const grid = document.getElementById('favorite-palette-grid');
+            const emptyMsg = document.getElementById('favorite-palette-empty');
+            const countBadge = document.getElementById('fav-count-badge');
+            grid.innerHTML = '';
+
+            countBadge.textContent = favoritePalettes.length > 0
+                ? `${favoritePalettes.length} / ${MAX_FAVORITE_PALETTES}`
+                : '';
+
+            if (favoritePalettes.length === 0) {
+                grid.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyMsg.style.display = 'none';
+
+            favoritePalettes.forEach(palette => {
+                const wrap = document.createElement('div');
+                wrap.className = 'fav-swatch-wrap';
+
+                const btn = document.createElement('button');
+                btn.className = 'fav-swatch';
+                btn.type = 'button';
+                btn.title = palette.name;
+                btn.dataset.accent = palette.accent;
+                btn.dataset.bg = palette.bg;
+                btn.style.background = `linear-gradient(135deg, ${palette.accent} 50%, ${palette.bg} 50%)`;
+                btn.innerHTML = CHECK_ICON;
+                btn.addEventListener('click', () => applyTheme(palette.accent, palette.bg));
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'fav-delete-btn';
+                delBtn.type = 'button';
+                delBtn.title = '削除';
+                delBtn.innerHTML = DELETE_ICON;
+                delBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteFavoritePalette(palette.id);
+                });
+
+                wrap.appendChild(btn);
+                wrap.appendChild(delBtn);
+                grid.appendChild(wrap);
+            });
+        }
+
+        function saveCurrentAsFavorite() {
+            const accent = document.getElementById('accent-input').value;
+            const bg = document.getElementById('bg-input').value;
+
+            if (favoritePalettes.some(p => isSameColorPair(p.accent, p.bg, accent, bg))) {
+                return;
+            }
+
+            if (favoritePalettes.length >= MAX_FAVORITE_PALETTES) {
+                favoritePalettes.shift();
+            }
+
+            favoritePalettes.push({
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                name: `カスタム ${favoritePalettes.length + 1}`,
+                accent,
+                bg
+            });
+
+            saveFavoritePalettes();
+            renderFavoritePalettes();
+            updateSelectionHighlights(accent, bg);
+            updateSaveButtonState(accent, bg);
+        }
+
+        function deleteFavoritePalette(id) {
+            favoritePalettes = favoritePalettes.filter(p => p.id !== id);
+            saveFavoritePalettes();
+            renderFavoritePalettes();
+
+            const accent = document.getElementById('accent-input').value;
+            const bg = document.getElementById('bg-input').value;
+            updateSelectionHighlights(accent, bg);
+            updateSaveButtonState(accent, bg);
+        }
+
         function initThemeCustomizer() {
             buildPresetGrid();
+            renderFavoritePalettes();
 
             const saved = JSON.parse(localStorage.getItem('aix_theme'));
             const initial = saved || DEFAULT_THEME;
@@ -868,6 +984,7 @@
             const accentInput = document.getElementById('accent-input');
             const bgInput = document.getElementById('bg-input');
             const resetBtn = document.getElementById('theme-reset-btn');
+            const saveBtn = document.getElementById('theme-save-btn');
 
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -888,6 +1005,10 @@
 
             bgInput.addEventListener('input', () => {
                 applyTheme(accentInput.value, bgInput.value);
+            });
+
+            saveBtn.addEventListener('click', () => {
+                saveCurrentAsFavorite();
             });
 
             resetBtn.addEventListener('click', () => {
