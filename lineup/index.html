@@ -611,6 +611,7 @@
             <button class="tab-btn" draggable="true" data-tab="labor">労務</button>
             <button class="tab-btn" draggable="true" data-tab="recruiting">採用</button>
             <button class="tab-btn" draggable="true" data-tab="general">総務</button>
+            <button class="tab-btn" draggable="true" data-tab="common">共通</button>
         </div>
 
         <div id="favorites" class="tab-content active">
@@ -713,6 +714,10 @@
         </div>
 
         <div id="general" class="tab-content">
+            <div class="empty-message">No applications available in General Affairs.</div>
+        </div>
+
+        <div id="common" class="tab-content">
             <div class="cards">
                 <a href="https://booth.anfini-aix.com/" class="card" target="_blank" data-id="booth-dashboard">
                     <button class="pin-btn" onclick="toggleFavorite(event, 'booth-dashboard')">
