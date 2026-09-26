@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+/**
+ * top（Anfini AIXポータル）— anfini-aix.com/lineup 配下で配信する単一ファイルWorker。
+ * 元はGitHub Pagesで配信していた静的サイト（index.html）をそのまま埋め込んでいる。
+ * ルートドメイン(anfini-aix.com)の他のパスには関与しないよう、
+ * Cloudflare側のWorker Route（例: anfini-aix.com/lineup*）でこのパスだけに限定すること。
+ */
+const PAGE_HTML = `<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -751,7 +757,7 @@
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
                 const appId = clonedCard.getAttribute('data-id');
-                clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
+                clonedCard.querySelector('.pin-btn').setAttribute('onclick', \`toggleFavorite(event, '\${appId}')\`);
                 allGrid.appendChild(clonedCard);
             });
         }
@@ -775,7 +781,7 @@
 
             const favCards = [];
             favorites.forEach(id => {
-                const originalCard = document.querySelector(`.tab-content:not(#all):not(#favorites) .card[data-id="${id}"]`);
+                const originalCard = document.querySelector(\`.tab-content:not(#all):not(#favorites) .card[data-id="\${id}"]\`);
                 if (originalCard) {
                     favCards.push(originalCard);
                 }
@@ -788,7 +794,7 @@
                 favCards.forEach(card => {
                     const clonedCard = card.cloneNode(true);
                     const appId = clonedCard.getAttribute('data-id');
-                    clonedCard.querySelector('.pin-btn').setAttribute('onclick', `toggleFavorite(event, '${appId}')`);
+                    clonedCard.querySelector('.pin-btn').setAttribute('onclick', \`toggleFavorite(event, '\${appId}')\`);
                     favoritesGrid.appendChild(clonedCard);
                 });
             } else {
@@ -834,7 +840,7 @@
             const targetContent = document.getElementById(tabId);
             if (targetContent) targetContent.classList.add('active');
 
-            const clickedButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            const clickedButton = document.querySelector(\`.tab-btn[data-tab="\${tabId}"]\`);
             if (clickedButton) clickedButton.classList.add('active');
         }
 
@@ -920,7 +926,7 @@
 
             const container = document.getElementById('tab-container');
             savedOrder.forEach(tabId => {
-                const btn = container.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+                const btn = container.querySelector(\`.tab-btn[data-tab="\${tabId}"]\`);
                 if (btn) container.appendChild(btn);
             });
         }
@@ -951,7 +957,7 @@
             const r = parseInt(hex.substring(0, 2), 16);
             const g = parseInt(hex.substring(2, 4), 16);
             const b = parseInt(hex.substring(4, 6), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            return \`rgba(\${r}, \${g}, \${b}, \${alpha})\`;
         }
 
         function applyTheme(accent, bg, save = true) {
@@ -1017,7 +1023,7 @@
                 btn.title = preset.name;
                 btn.dataset.accent = preset.accent;
                 btn.dataset.bg = preset.bg;
-                btn.style.background = `linear-gradient(135deg, ${preset.accent} 50%, ${preset.bg} 50%)`;
+                btn.style.background = \`linear-gradient(135deg, \${preset.accent} 50%, \${preset.bg} 50%)\`;
                 btn.innerHTML = CHECK_ICON;
                 btn.addEventListener('click', () => applyTheme(preset.accent, preset.bg));
                 grid.appendChild(btn);
@@ -1037,7 +1043,7 @@
             grid.innerHTML = '';
 
             countBadge.textContent = favoritePalettes.length > 0
-                ? `${favoritePalettes.length} / ${MAX_FAVORITE_PALETTES}`
+                ? \`\${favoritePalettes.length} / \${MAX_FAVORITE_PALETTES}\`
                 : '';
 
             if (favoritePalettes.length === 0) {
@@ -1059,7 +1065,7 @@
                 btn.title = palette.name;
                 btn.dataset.accent = palette.accent;
                 btn.dataset.bg = palette.bg;
-                btn.style.background = `linear-gradient(135deg, ${palette.accent} 50%, ${palette.bg} 50%)`;
+                btn.style.background = \`linear-gradient(135deg, \${palette.accent} 50%, \${palette.bg} 50%)\`;
                 btn.innerHTML = CHECK_ICON;
                 btn.addEventListener('click', () => applyTheme(palette.accent, palette.bg));
 
@@ -1093,7 +1099,7 @@
 
             favoritePalettes.push({
                 id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                name: `カスタム ${favoritePalettes.length + 1}`,
+                name: \`カスタム \${favoritePalettes.length + 1}\`,
                 accent,
                 bg
             });
@@ -1164,3 +1170,19 @@
     </script>
 </body>
 </html>
+`;
+
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      return new Response('Method Not Allowed', { status: 405 });
+    }
+    if (url.pathname === '/lineup' || url.pathname === '/lineup/') {
+      return new Response(PAGE_HTML, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      });
+    }
+    return new Response('Not Found', { status: 404 });
+  },
+};

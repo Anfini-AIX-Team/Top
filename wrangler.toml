@@ -1,0 +1,7 @@
+name = "top"
+main = "top.js"
+compatibility_date = "2024-11-11"
+
+[[routes]]
+pattern = "anfini-aix.com/lineup*"
+zone_name = "anfini-aix.com"
