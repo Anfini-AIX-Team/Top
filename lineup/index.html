@@ -772,7 +772,19 @@
         </div>
 
         <div id="finance" class="tab-content">
-            <div class="empty-message">No applications available in Finance.</div>
+            <div class="cards">
+                <a href="https://acdocs.anfini-aix.com/" class="card" target="_blank" data-id="accounting-docs-filer">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'accounting-docs-filer')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon" style="background:color-mix(in srgb, #3B6EF0 14%, transparent); color:#3B6EF0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <h2 class="card-title">請求書・領収書仕分けBot</h2>
+                    <p class="card-desc">受信した請求書・領収書を発行元の会社名で判定・リネームし、保存先へ自動で振り分けるアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+            </div>
         </div>
 
         <div id="labor" class="tab-content">
@@ -832,7 +844,19 @@
         </div>
 
         <div id="general" class="tab-content">
-            <div class="empty-message">No applications available in General Affairs.</div>
+            <div class="cards">
+                <a href="https://document.anfini-aix.com/" class="card" target="_blank" data-id="document-router">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'document-router')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon" style="background:color-mix(in srgb, #7BA7E8 14%, transparent); color:#7BA7E8;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M12 13v4"/><path d="M9.5 15l2.5 2l2.5 -2"/></svg>
+                    </div>
+                    <h2 class="card-title">受信ファイル振分管理</h2>
+                    <p class="card-desc">複合機のスキャンや転送メールで届いた書類を、宛先ごとの一次格納先（Boxフォルダ）へ振り分けるアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+            </div>
         </div>
 
         <div id="common" class="tab-content">
@@ -858,6 +882,18 @@
                     </div>
                     <h2 class="card-title">Anfini TimeTree</h2>
                     <p class="card-desc">面接などの予定をTimeTreeカレンダーに登録・管理するアプリケーションです。</p>
+                    <div class="card-link-text">Open App</div>
+                </a>
+
+                <a href="https://outlook-timetree.anfini-aix.com/" class="card" target="_blank" data-id="outlook-timetree-sync">
+                    <button class="pin-btn" onclick="toggleFavorite(event, 'outlook-timetree-sync')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                    </button>
+                    <div class="card-icon" style="background:color-mix(in srgb, #7C3AED 14%, transparent); color:#7C3AED;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/><path d="M8.5 16h7M13 13.5l2.5 2.5-2.5 2.5"/></svg>
+                    </div>
+                    <h2 class="card-title">Outlook同期</h2>
+                    <p class="card-desc">各自のPC上のOutlookカレンダーから、TimeTreeへ予定を自動同期するアプリケーションです。</p>
                     <div class="card-link-text">Open App</div>
                 </a>
 
