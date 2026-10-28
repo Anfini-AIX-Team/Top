@@ -997,7 +997,11 @@
             const allGrid = document.getElementById('all-grid');
             allGrid.innerHTML = '';
 
-            const originalCards = document.querySelectorAll('.tab-content:not(#all):not(#favorites) .card[data-id]');
+            // タブボタンの今の並び（ドラッグで変えた順を含む）で、各タブのカードをそのタブ内の順に並べる
+            const tabIds = Array.from(document.querySelectorAll('.tab-btn'))
+                .map(btn => btn.getAttribute('data-tab'))
+                .filter(id => id !== 'all' && id !== 'favorites');
+            const originalCards = tabIds.flatMap(id => Array.from(document.querySelectorAll(`#${id} .card[data-id]`)));
 
             originalCards.forEach(card => {
                 const clonedCard = card.cloneNode(true);
@@ -1163,6 +1167,8 @@
             const buttons = document.querySelectorAll('.tab-btn');
             const order = Array.from(buttons).map(btn => btn.getAttribute('data-tab'));
             localStorage.setItem('aix_tab_order', JSON.stringify(order));
+            buildAllTab();
+            syncPinStates();
         }
 
         function restoreTabOrder() {
